@@ -25,23 +25,36 @@ ant.main = function($) {
 	// Build interface __
 	
 	// Get video position in window
-	ant.video.position = $(ant.video).position();
-	ant.video.x = ant.video.position.left;
-	ant.video.lowerY = ant.video.position.top + $(ant.video).height();
-	console && console.log( ant.video );
-	console && console.log( 'test' );
+	ant.video.offset = $(ant.video).offset();
+	ant.video.offset.right = ant.video.offset.left + $(ant.video).width();
+	ant.video.offset.bottom = ant.video.offset.top + $(ant.video).height();
 
 	// input text box
 	if (!$('#ant-input').length) {
-		ant.input = $('<div id=\'ant-input-wrap\'><input type=\'text\' id=\'ant-input\' value=\'Enter comments!!!\' /></div>');
+		ant.input = $('<div id="ant-input-wrap"><input type="text" id="ant-input" value="Enter comments!!!" /></div>');
 		$('body').append(ant.input);
-		$('#ant-input').width('50%');
+		$('#ant-input').css({
+			'margin': '1em 0',
+			'position': 'absolute',
+			'top': ant.video.offset.bottom,
+			'left': ant.video.offset.left,
+			'width': '400px'
+		});
 	}
 
 	// display
 	if (!$('#ant-display').length) {
-		ant.display = $('<div id=\'ant-display\'><ul></ul></div>');
+		ant.display = $('<div id="ant-display"><ul></ul></div>');
 		$('body').append(ant.display);
+		$('#ant-display').css({
+			'margin': '0 1em',
+			'padding': '1em',
+			'position': 'absolute',
+			'top': ant.video.offset.top,
+			'left': ant.video.offset.right,
+			'background-color': 'white',
+			'text-align': 'left'
+		});
 	}
 
 
@@ -74,7 +87,7 @@ ant.main = function($) {
 
 			//console.log(o);
 
-			var str = '<a href=\'#rm\' class=\'ant-comment-rm\' data-id=\'' + i + '\' title=\'Delete\'>[x]</a> :: <a href=\'#\' class=\'ant-comment-link\' data-time=\'' + o.time + '\' title=\'' + o.time + ' sec\'>' + o.comment + '</a>';
+			var str = '<a href="#rm" class="ant-comment-rm" data-id="' + i + '" title="Delete">[x]</a> :: <a href="#" class="ant-comment-link" data-time="' + o.time + '" title="' + o.time + ' sec">' + o.comment + '</a>';
 			this.list.append( '<li>' + str + '</li>' );
 		},
 
@@ -138,7 +151,7 @@ ant.main = function($) {
 
 	ant.highlightComment = function() {
 		var defaultVal = '16px';
-		var highlightedVal = '50px';
+		var highlightedVal = '32px';
 		var cssProperty = 'font-size';
 		var t = parseInt(ant.video.currentTime);
 		var links = $('.ant-comment-link');
