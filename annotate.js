@@ -5,7 +5,11 @@ ant.time = 0;
 
 ant.logger = {
 
-	key : 'vidplay.' + window.location,
+	key : null,
+		  
+	init : function() {
+		this.key = 'mediabistro.ant.' + window.location + '.' + ant.video.src;
+	},
 
 	log : function( val ) {
 		window.localStorage.setItem( this.key, JSON.stringify(val) );
@@ -20,46 +24,82 @@ ant.logger = {
 
 ant.main = function($) {
 	console && console.log('main');
+
+	// Define storage key
+	this.logger.init();
+
+	// Remove script so that we don't accumulate on multiple bookmarklet presses
 	$("script[src='http://al.mediabistro.net/labs/al/annotate/annotate.js']").remove();
+
 
 	// Build interface __
 	
 	// Get video position in window
-	ant.video.offset = $(ant.video).offset();
-	ant.video.offset.right = ant.video.offset.left + $(ant.video).width();
-	ant.video.offset.bottom = ant.video.offset.top + $(ant.video).height();
+	this.video.offset = $(this.video).offset();
+	this.video.offset.right = this.video.offset.left + $(this.video).width();
+	this.video.offset.bottom = this.video.offset.top + $(this.video).height();
 
 	// input text box
 	if (!$('#ant-input').length) {
-		ant.input = $('<div id="ant-input-wrap"><input type="text" id="ant-input" value="Enter comments!!!" /></div>');
-		$('body').append(ant.input);
-		$('#ant-input').css({
+		this.input = $('<div id="ant-input-wrap" class="ant-draggable"><div class="ant-move">[move]</div><input type="text" id="ant-input" value="Enter notes!!!" /></div>');
+		$('body').append(this.input);
+		$('#ant-input-wrap').css({
 			'margin': '1em 0',
+			'padding': '0 1em 1em 1em',
+			'border': '5px solid #000',
+			'background-color': '#fff',
 			'position': 'absolute',
-			'top': ant.video.offset.bottom,
-			'left': ant.video.offset.left,
-			'width': '400px'
+			'top': this.video.offset.bottom,
+			'left': this.video.offset.left,
+			'width': '400px',
+			'z-index': '99999'
+		});
+		$('#ant-input').css({
+			'width': '100%'
 		});
 	}
 
 	// display
 	if (!$('#ant-display').length) {
-		ant.display = $('<div id="ant-display"><ul></ul></div>');
-		$('body').append(ant.display);
+		this.display = $('<div id="ant-display" class="ant-draggable"><div class="ant-move">[move]</div><h2>Notes</h2><ul></ul></div>');
+		$('body').append(this.display);
 		$('#ant-display').css({
 			'margin': '0 1em',
-			'padding': '1em',
+			'padding': '0 1em 1em 1em',
+			'border': '5px solid #000',
+			'background-color': '#fff',
 			'position': 'absolute',
-			'top': ant.video.offset.top,
-			'left': ant.video.offset.right,
+			'top': this.video.offset.top,
+			'left': this.video.offset.right,
 			'background-color': 'white',
-			'text-align': 'left'
+			'text-align': 'left',
+			'z-index': '99999'
+		});
+		$('#ant-display ul').css({
+			'margin': '0',
+			'padding': '0',
+			'list-style-type': 'none'
+		});
+		$('#ant-display h2').css({
+			'color': '#000'
 		});
 	}
 
+	// Allow boxes to be moved around
+	$(function() {
+		$('.ant-draggable').draggable();
+	});
+	$('.ant-move').css({
+		'margin': '0 0 1em 0',
+		'padding': '0',
+		'text-align': 'right',
+		'color': '#000'
+	});
 
-	// Comments controller __
-	ant.comments = {
+
+	// Notes controller __
+
+	this.notes = {
 
 		arr : [],
 		list : $('#ant-display ul'),
@@ -69,7 +109,7 @@ ant.main = function($) {
 			if (!val)
 				return;
 
-			var o = { comment: val, time: ant.time };
+			var o = { note: val, time: this.time };
 			this.arr.push(o);
 			//console.log(this.arr);
 			this.updateList();
@@ -87,7 +127,7 @@ ant.main = function($) {
 
 			//console.log(o);
 
-			var str = '<a href="#rm" class="ant-comment-rm" data-id="' + i + '" title="Delete">[x]</a> :: <a href="#" class="ant-comment-link" data-time="' + o.time + '" title="' + o.time + ' sec">' + o.comment + '</a>';
+			var str = '<a href="#rm" class="ant-note-rm" data-id="' + i + '" title="Delete">[x]</a> :: <a href="#" class="ant-note-link" data-time="' + o.time + '" title="' + o.time + ' sec">' + o.note + '</a>';
 			this.list.append( '<li>' + str + '</li>' );
 		},
 
@@ -122,7 +162,7 @@ ant.main = function($) {
 			}
 
 			if ( pEvent.which == '13' ) {
-				ant.comments.add( th.val() );
+				ant.notes.add( th.val() );
 				th.val('');
 			}
 		})
@@ -131,33 +171,37 @@ ant.main = function($) {
 			th.val('');
 		});
 
-	$('.ant-comment-link').live('click', function(e) {
+	$('.ant-note-link').live('click', function(e) {
 		var t = $(this);
 		//console.log( t.attr('data-time'));
 		ant.video.currentTime = t.attr('data-time');
 		e.preventDefault();
 	});
 
-	$('.ant-comment-rm').live('click', function(e) {
+	$('.ant-note-rm').live('click', function(e) {
 		var t = $(this);
-		ant.comments.delete( t.attr('data-id') );
+		ant.notes.delete( t.attr('data-id') );
 		t.parent().remove();
 		e.preventDefault();
 	});
 
 	$(window).unload( function() {
-		ant.logger.log( ant.comments.arr );
+		ant.logger.log( ant.notes.arr );
 	});
 
-	ant.highlightComment = function() {
+
+	// Highlight note when video time matches __
+
+	this.highlightNote = function() {
 		var defaultVal = '16px';
 		var highlightedVal = '32px';
 		var cssProperty = 'font-size';
-		var t = parseInt(ant.video.currentTime);
-		var links = $('.ant-comment-link');
+		var t = parseInt(this.video.currentTime);
+		var links = $('.ant-note-link');
 		var resetHighlights = function() {
 			links.each( function() {
 				$(this).css(cssProperty, defaultVal);
+				//console && console.log(defaultVal);
 			});
 		};
 		links.each( function() {
@@ -167,17 +211,22 @@ ant.main = function($) {
 				th.css(cssProperty, highlightedVal);
 			}
 		});
-		setTimeout('ant.highlightComment();', 500);
+		setTimeout('ant.highlightNote();', 500);
 	};
 
+
+	// Init __
+
 	$(document).ready( function() {
-		// Load from local storage
-		if (ant.comments) {
-			ant.comments.arr = ant.logger.get() || [];
-			ant.comments.refresh();
+
+		// Load notes from local storage
+		if (ant.notes) {
+			ant.notes.arr = ant.logger.get() || [];
+			ant.notes.refresh();
 		}
 
-		ant.highlightComment();
+		// Run highlighting engine
+		ant.highlightNote();
 	});
 
 };
@@ -214,7 +263,7 @@ ant.bootleg = function() {
 	// Stop if no video!
 	if (!ant.video) return;
 
-	console && console.log(ant.video);
+	console && console.log(ant.video.src);
 
 	if (typeof jQuery == 'undefined') {
 		ant.load( 'jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js' );
