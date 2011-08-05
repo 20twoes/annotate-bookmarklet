@@ -28,8 +28,15 @@ ant.main = function($) {
 	// Define storage key
 	this.logger.init();
 
-	// Remove script so that we don't accumulate on multiple bookmarklet presses
-	$("script[src='http://al.mediabistro.net/labs/al/annotate/annotate.js']").remove();
+	// Need to remove previous assets so we don't accumulate on multiple bookmarklet presses
+	// Remove script 
+	//$("script[src='http://al.mediabistro.net/labs/al/annotate/annotate.js']").remove();
+	// Remove css
+	//$("link[href='http://al.mediabistro.net/labs/al/annotate/annotate.css']").remove();
+
+	// Add CSS styles, if not present
+	// TODO: check if css is present
+	$('head').append('<link href="http://al.mediabistro.net/labs/al/annotate/annotate.css" type="text/css" rel="stylesheet">');
 
 
 	// Build interface __
@@ -39,61 +46,32 @@ ant.main = function($) {
 	this.video.offset.right = this.video.offset.left + $(this.video).width();
 	this.video.offset.bottom = this.video.offset.top + $(this.video).height();
 
-	// input text box
+	// Toolbar
+	this.toolbar = '<div class="ant-toolbar"><div class="ant-move">[move]</div><div class="ant-close">[x]</div></div>';
+
+	// Input text box
 	if (!$('#ant-input').length) {
-		this.input = $('<div id="ant-input-wrap" class="ant-draggable"><div class="ant-move">[move]</div><input type="text" id="ant-input" value="Enter notes!!!" /></div>');
+		this.input = $('<div id="ant-input-wrap" class="ant-draggable">' + this.toolbar + '<input type="text" id="ant-input" value="Enter notes!!!" /></div>');
 		$('body').append(this.input);
-		$('#ant-input-wrap').css({
-			'margin': '1em 0',
-			'padding': '0 1em 1em 1em',
-			'border': '5px solid #000',
-			'background-color': '#fff',
-			'position': 'absolute',
-			'top': this.video.offset.bottom,
-			'left': this.video.offset.left,
-			'width': '400px',
-			'z-index': '99999'
-		});
-		$('#ant-input').css({
-			'width': '100%'
+		$('#ant-input-wrap').offset({
+			top: this.video.offset.bottom,
+			left: this.video.offset.left
 		});
 	}
 
-	// display
+	// Display
 	if (!$('#ant-display').length) {
-		this.display = $('<div id="ant-display" class="ant-draggable"><div class="ant-move">[move]</div><h2>Notes</h2><ul></ul></div>');
+		this.display = $('<div id="ant-display" class="ant-draggable">' + this.toolbar + '<h2>Notes</h2><ul></ul></div>');
 		$('body').append(this.display);
-		$('#ant-display').css({
-			'margin': '0 1em',
-			'padding': '0 1em 1em 1em',
-			'border': '5px solid #000',
-			'background-color': '#fff',
-			'position': 'absolute',
-			'top': this.video.offset.top,
-			'left': this.video.offset.right,
-			'background-color': 'white',
-			'text-align': 'left',
-			'z-index': '99999'
-		});
-		$('#ant-display ul').css({
-			'margin': '0',
-			'padding': '0',
-			'list-style-type': 'none'
-		});
-		$('#ant-display h2').css({
-			'color': '#000'
+		$('#ant-display').offset({
+			top: this.video.offset.top,
+			left: this.video.offset.right
 		});
 	}
 
-	// Allow boxes to be moved around
+	// UI functionality
 	$(function() {
 		$('.ant-draggable').draggable();
-	});
-	$('.ant-move').css({
-		'margin': '0 0 1em 0',
-		'padding': '0',
-		'text-align': 'right',
-		'color': '#000'
 	});
 
 

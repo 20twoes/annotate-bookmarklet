@@ -1,0 +1,39 @@
+.ant-toolbar {
+	margin: 0 0 1em 0;
+	padding: 0;
+	text-align: right;
+	color: #000;
+}
+#ant-input-wrap {
+	margin: 1em 0;
+	padding: 0 1em 1em 1em;
+	border: 5px solid #000;
+	background-color: #fff;
+	position: absolute;
+	width: 400px;
+	z-index: 99999;
+}
+#ant-input {
+	width: 100%;
+}
+#ant-display {
+	margin: 0 1em;
+	padding: 0 1em 1em 1em;
+	border: 5px solid #000;
+	background-color: #fff;
+	position: absolute;
+	background-color: white;
+	text-align: left;
+	z-index: 99999;
+}
+#ant-display {
+	width: 25%;
+}
+#ant-display ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+#ant-display h2 {
+	color: #000;
+}
