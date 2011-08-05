@@ -4,6 +4,18 @@
 	text-align: right;
 	color: #000;
 }
+.ant-toolbar span {
+	margin: 0 .15em;
+}
+.ant-toolbar span:hover {
+	color: orange;
+}
+.ant-move {
+	cursor: move;
+}
+.ant-close {
+	cursor: default;
+}
 #ant-input-wrap {
 	margin: 1em 0;
 	padding: 0 1em 1em 1em;

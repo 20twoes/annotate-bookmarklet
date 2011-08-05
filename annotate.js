@@ -47,7 +47,7 @@ ant.main = function($) {
 	this.video.offset.bottom = this.video.offset.top + $(this.video).height();
 
 	// Toolbar
-	this.toolbar = '<div class="ant-toolbar"><div class="ant-move">[move]</div><div class="ant-close">[x]</div></div>';
+	this.toolbar = '<div class="ant-toolbar"><span class="ant-move">[move]</span><span class="ant-close">[x]</span></div>';
 
 	// Input text box
 	if (!$('#ant-input').length) {
@@ -165,6 +165,12 @@ ant.main = function($) {
 
 	$(window).unload( function() {
 		ant.logger.log( ant.notes.arr );
+	});
+
+	$('.ant-close').live('click', function(e) {
+		$('#ant-display').remove();
+		$('#ant-input-wrap').remove();
+		e.preventDefault();
 	});
 
 
