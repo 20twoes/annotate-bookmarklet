@@ -8,7 +8,7 @@
 	margin: 0 .15em;
 }
 .ant-toolbar span:hover {
-	color: orange;
+	color: #999;
 }
 .ant-move {
 	cursor: move;
@@ -46,6 +46,18 @@
 	padding: 0;
 	list-style-type: none;
 }
+#ant-display li {
+	margin: .25em 0;
+}
 #ant-display h2 {
 	color: #000;
+}
+#ant-display a {
+	color: #000;
+}
+#ant-display a:hover {
+	color: #999;
+}
+#ant-display .ant-active {
+	background-color: #ccc;
 }

@@ -177,22 +177,16 @@ ant.main = function($) {
 	// Highlight note when video time matches __
 
 	this.highlightNote = function() {
-		var defaultVal = '16px';
-		var highlightedVal = '32px';
-		var cssProperty = 'font-size';
 		var t = parseInt(this.video.currentTime);
 		var links = $('.ant-note-link');
-		var resetHighlights = function() {
-			links.each( function() {
-				$(this).css(cssProperty, defaultVal);
-				//console && console.log(defaultVal);
-			});
+		var resetHighlight = function() {
+			$('.ant-active').removeClass('ant-active');
 		};
 		links.each( function() {
 			var th = $(this);
 			if ( t == parseInt(th.attr('data-time')) ) {
-				resetHighlights();
-				th.css(cssProperty, highlightedVal);
+				resetHighlight();
+				th.parent().addClass('ant-active');
 			}
 		});
 		setTimeout('ant.highlightNote();', 500);
