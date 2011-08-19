@@ -87,10 +87,9 @@ ant.main = function($) {
 			if (!val)
 				return;
 
-			var o = { note: val, time: this.time };
+			var o = { note: val, time: ant.time };
 			this.arr.push(o);
 			//console.log(this.arr);
-			this.updateList();
 			this.arr.sort( function(a,b) {
 				return (a.time - b.time);
 			});
@@ -105,8 +104,8 @@ ant.main = function($) {
 
 			//console.log(o);
 
-			var str = '<a href="#rm" class="ant-note-rm" data-id="' + i + '" title="Delete">[x]</a> :: <a href="#" class="ant-note-link" data-time="' + o.time + '" title="' + o.time + ' sec">' + o.note + '</a>';
-			this.list.append( '<li>' + str + '</li>' );
+			var item = '<a href="#rm" class="ant-note-rm" data-id="' + i + '" title="Delete">[x]</a> :: <a href="#" class="ant-note-link" data-time="' + o.time + '" title="' + o.time + ' sec">' + o.note + '</a>';
+			this.list.append( '<li>' + item + '</li>' );
 		},
 
 		refresh : function () {
