@@ -1,32 +1,73 @@
 var ant = ant || {};
 
-// Holds the current time of the video
-ant.time = 0;
 
-ant.logger = {
+// Logger - interface for local storage
+// ----------------------------------------------------------------------
+ant.newLogger = function(videoSrc) {
+	return {
 
-	key : null,
-		  
-	init : function() {
-		this.key = 'mediabistro.ant.' + window.location + '.' + ant.video.src;
-	},
+		key : 'mediabistro.ant.' + window.location + '.' + videoSrc,
 
-	log : function( val ) {
-		window.localStorage.setItem( this.key, JSON.stringify(val) );
-		//console.log(this.key);
-	},
+		log : function( val ) {
+			window.localStorage.setItem( this.key, JSON.stringify(val) );
+			//console.log(this.key);
+		},
 
-	get : function() {
-		//console.log(this.key);
-		return JSON.parse( window.localStorage.getItem( this.key ) );
-	}
+		get : function() {
+			//console.log(this.key);
+			return JSON.parse( window.localStorage.getItem( this.key ) );
+		}
+	};
 };
 
+
+// Video Controller - interface for <video> DOM element
+// ----------------------------------------------------------------------
+ant.newVideo = function() {
+	return {
+		el: null,
+
+		select: function() {
+			// Get the video we're going to annotate
+			var video = document.getElementsByTagName('video');
+			//console && console.log(ant.video);
+			video = video[0] || null;
+
+			//console && console.log(video.src);
+
+			return video;
+		},
+
+		getOffset: function(video) {
+			// Get video position in window
+			var offset = $(video).offset();
+			offset.right = offset.left + $(video).width();
+			offset.bottom = offset.top + $(video).height();
+
+			//console && console.log(offset);
+
+			return offset;
+		}
+	};
+};
+
+
+// Main logic
+// ----------------------------------------------------------------------
 ant.main = function($) {
 	console && console.log('main');
 
+	this.video = this.newVideo();
+	this.video.el = this.video.select();
+
+	// Stop if no video!  <-- Exit condition
+	if (!this.video.el) return;
+
+	// Holds the current time of the video
+	this.time = 0;
+
 	// Define storage key
-	this.logger.init();
+	this.logger = this.newLogger(this.video.el.src);
 
 	// Need to remove previous assets so we don't accumulate on multiple bookmarklet presses
 	// Remove script 
@@ -40,12 +81,9 @@ ant.main = function($) {
 
 
 	// Build interface __
-	
-	// Get video position in window
-	this.video.offset = $(this.video).offset();
-	this.video.offset.right = this.video.offset.left + $(this.video).width();
-	this.video.offset.bottom = this.video.offset.top + $(this.video).height();
 
+	this.video.offset = this.video.getOffset(this.video.el);
+	
 	// Toolbar
 	this.toolbar = '<div class="ant-toolbar"><span class="ant-move">[move]</span><span class="ant-close">[x]</span></div>';
 
@@ -135,7 +173,7 @@ ant.main = function($) {
 			// use the time when you start typing instead of when you hit enter
 			// minus a second 
 			if ( !th.val() ) {
-				ant.time = ant.video.currentTime - 1;
+				ant.time = ant.video.el.currentTime - 1;
 			}
 
 			if ( pEvent.which == '13' ) {
@@ -151,7 +189,7 @@ ant.main = function($) {
 	$('.ant-note-link').live('click', function(e) {
 		var t = $(this);
 		//console.log( t.attr('data-time'));
-		ant.video.currentTime = t.attr('data-time');
+		ant.video.el.currentTime = t.attr('data-time');
 		e.preventDefault();
 	});
 
@@ -176,7 +214,7 @@ ant.main = function($) {
 	// Highlight note when video time matches __
 
 	this.highlightNote = function() {
-		var t = parseInt(this.video.currentTime);
+		var t = parseInt(this.video.el.currentTime);
 		var links = $('.ant-note-link');
 		var resetHighlight = function() {
 			$('.ant-active').removeClass('ant-active');
@@ -210,6 +248,7 @@ ant.main = function($) {
 
 
 // Dependencies
+// ----------------------------------------------------------------------
 ant.load = function(id, src) {
 	var el = document.createElement('script');
 	el.type = 'text/javascript';
@@ -232,16 +271,8 @@ ant.loadJqueryUI = function() {
 
 
 // Bootleg
+// ----------------------------------------------------------------------
 ant.bootleg = function() {
-	// Get the video we're going to annotate
-	ant.video = document.getElementsByTagName('video');
-	ant.video = ant.video[0];
-
-	// Stop if no video!
-	if (!ant.video) return;
-
-	console && console.log(ant.video.src);
-
 	if (typeof jQuery == 'undefined') {
 		ant.load( 'jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js' );
 		ant.jquery.addEventListener('load', ant.loadJqueryUI);
