@@ -138,7 +138,7 @@ var Ant = function($) {
 		template: _.template(
 			'<h1>Notes</h1>\
 			<div class="ant-content">\
-				<div id="create-note">\
+				<div id="ant-create-note">\
 					<input id="ant-new-note" placeholder="Enter a note about the video" type="text" />\
 					<span class="ant-ui-tooltip-top" style="display:none;">Press Enter to save this note</span>\
 				</div>\
@@ -207,8 +207,9 @@ var Ant = function($) {
 	self.Notes = new self.NoteList;
 
 	// Create encompassing div first
-	var el = (new Backbone.View).make('div', {id: 'ant-app'});
+	var el = (new Backbone.View).make('div', {id: 'ant-app', class: 'ant-draggable'});
 	$('body').append(el);
+	$('.ant-draggable').draggable();
 
 	// Inject app into new div
 	self.App = new self.AppView({el: el});
@@ -242,15 +243,27 @@ function AntLoad() {
 			obj: 'Store',
 			//src: 'https://raw.github.com/jeromegn/Backbone.localStorage/master/backbone.localStorage.js'
 			src: '/labs/al/annotate/localStorage.js'
+		},
+		{
+			obj: 'antPlaceholder',
+			src: '/labs/al/annotate/annotate.css?v=1',
+			type: 'css'
 		}
 	];
 
 	var scriptID = 1;
-	var load = function(src) {
-		var el = document.createElement('script');
-		el.type = 'text/javascript';
-		el.src = src;
-		el.id = 'ant-script' + scriptID++;
+	var load = function(src, type) {
+		if (type) {
+			var el = document.createElement('link');
+			el.type = 'text/css';
+			el.rel = "stylesheet";
+			el.href = src;
+		} else {
+			var el = document.createElement('script');
+			el.type = 'text/javascript';
+			el.src = src;
+		}
+		el.id = 'ant-asset' + scriptID++;
 		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(el);
 	};
 
@@ -260,7 +273,7 @@ function AntLoad() {
 			eval(o.obj)
 		} catch(e) {
 			// Load if obj not defined
-			load(o.src);
+			load(o.src, o.type);
 		}
 	}
 	
@@ -268,7 +281,7 @@ function AntLoad() {
 	// Start when our last script loads
 	// This is a temp solution
 	// Does not ensure that all scripts have loaded
-	document.getElementById('ant-script5').addEventListener('load', AntMain);
+	document.getElementById('ant-asset5').addEventListener('load', AntMain);
 };
 
 

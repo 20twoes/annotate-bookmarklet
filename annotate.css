@@ -1,3 +1,4 @@
+/*
 .ant-toolbar {
 	margin: 0 0 1em 0;
 	padding: 0;
@@ -16,18 +17,22 @@
 .ant-close {
 	cursor: default;
 }
-#ant-input-wrap {
+*/
+#ant-app {
 	margin: 1em 0;
 	padding: 0 1em 1em 1em;
 	border: 5px solid #000;
 	background-color: #fff;
 	position: absolute;
 	width: 400px;
+		   /*
 	z-index: 99999;
+	*/
 }
-#ant-input {
+#ant-new-note {
 	width: 100%;
 }
+/*
 #ant-display {
 	margin: 0 1em;
 	padding: 0 1em 1em 1em;
@@ -41,23 +46,21 @@
 #ant-display {
 	width: 25%;
 }
-#ant-display ul {
+*/
+#ant-note-list {
 	margin: 0;
 	padding: 0;
 	list-style-type: none;
 }
-#ant-display li {
+#ant-note-list li {
 	margin: .25em 0;
 }
-#ant-display h2 {
+#ant-note-list a {
 	color: #000;
 }
-#ant-display a {
-	color: #000;
-}
-#ant-display a:hover {
+#ant-note-list a:hover {
 	color: #999;
 }
-#ant-display .ant-active {
+#ant-note-list .ant-active {
 	background-color: #ccc;
 }
