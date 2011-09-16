@@ -2,6 +2,9 @@ var Ant = function($) {
 	//console && console.log('Ant1');
 	var self = {};
 
+
+	// Our video element.
+	//
 	self.video = (function() {
 		// Get the video we're going to annotate
 		var video = document.getElementsByTagName('video');
@@ -14,11 +17,29 @@ var Ant = function($) {
 	})();
 
 
+	// Our model for a note.
+	//
 	self.Note = Backbone.Model.extend({
-//		defaults: { time: 0 }
+
+		initialize: function() {
+			var that = this;
+			// Get video time rounded to 2 decimal places.
+			// TODO: Account for delayed reaction time? (by subtracting .5)
+			var getTime = function() {
+				var now = Math.round(self.video.currentTime * 100)/100;
+				// Don't override the time if exists,
+				// like when we first fetch from local storage.
+				return that.get('time') || now;
+			};
+
+			// Set the time the note was taken
+			this.set({time: getTime()});
+		}
 	});
 
 
+	// Our collection object for notes.
+	//
 	self.NoteList = Backbone.Collection.extend({
 		model: self.Note,
 
@@ -31,6 +52,8 @@ var Ant = function($) {
 	});
 
 
+	// Our model view for a note.
+	//
 	self.NoteView = Backbone.View.extend({
 		/*
 		self.template = _.template('<p><%= name %></p>');
@@ -41,7 +64,7 @@ var Ant = function($) {
 		template: _.template(
 			'<div class="ant-note-display">\
 				<a href="#" class="ant-note-link" data-time="<%= time %>" title="<%= time %> sec"><%= text %></a>\
-				________<span class="ant-note-destroy">[Delete]</span>\
+				________<span class="ant-note-edit-button">[Edit]</span><span class="ant-note-destroy">[Delete]</span>\
 			</div>\
 			<div class="ant-note-edit" style="display:none;">\
 				<input class="ant-note-input" type="text" value="" />\
@@ -50,9 +73,8 @@ var Ant = function($) {
 
 		events: {
 			'click .ant-note-destroy': 'clear',
-			// TODO: implement updateVideo
-			//'click .ant-note-link': 'updateVideo',
-			'click .ant-note-link': 'edit',
+			'click .ant-note-link': 'updateVideo',
+			'click .ant-note-edit-button': 'edit',
 			'keypress .ant-note-input': 'updateOnEnter'
 		},
 
@@ -60,8 +82,6 @@ var Ant = function($) {
 			this.model.bind('change', this.render, this);
 			this.model.bind('destroy', this.remove, this);
 
-			// Set the time the note was taken
-			this.model.set({time: self.video.currentTime});
 		},
 
 		render: function() {
@@ -103,11 +123,16 @@ var Ant = function($) {
 
 		clear: function() {
 			this.model.destroy();
+		},
+
+		updateVideo: function() {
+			self.video.currentTime = this.model.get('time');
 		}
 	});
 
 
-
+	// Our application view.
+	//
 	self.AppView = Backbone.View.extend({
 
 		template: _.template(
@@ -120,7 +145,6 @@ var Ant = function($) {
 				<div id="ant-notes">\
 					<ul id="ant-note-list"></ul>\
 				</div>\
-				<div>Double-click on a note to edit.</div>\
 			</div>'
 		),
 
@@ -211,11 +235,13 @@ function AntLoad() {
 		},
 		{
 			obj: 'Backbone',
-			src: 'http://documentcloud.github.com/backbone/backbone-min.js'
+			//src: 'http://documentcloud.github.com/backbone/backbone-min.js'
+			src: '/labs/al/annotate/backbone.js'
 		},
 		{
 			obj: 'Store',
-			src: 'https://raw.github.com/jeromegn/Backbone.localStorage/master/backbone.localStorage.js'
+			//src: 'https://raw.github.com/jeromegn/Backbone.localStorage/master/backbone.localStorage.js'
+			src: '/labs/al/annotate/localStorage.js'
 		}
 	];
 
@@ -247,7 +273,7 @@ function AntLoad() {
 
 
 function AntMain() {
-	new Ant(jQuery);
+	window.ant = new Ant(jQuery);
 };
 
 
