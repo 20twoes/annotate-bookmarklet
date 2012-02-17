@@ -248,7 +248,7 @@ function AntLoad() {
 		},
 		{
 			obj: 'antPlaceholder',
-			src: 'https://raw.github.com/20twoes/annotate-bookmarklet/annotate.css',
+			src: 'https://raw.github.com/20twoes/annotate-bookmarklet/master/annotate.css',
 			type: 'css'
 		}
 	];
