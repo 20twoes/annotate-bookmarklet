@@ -5,7 +5,7 @@ Ever wanted to make a note while you were watching that YouTube video?  Well now
 
 The Annotate Bookmarklet works with any site that use the HTML5 `<video>` tag for their videos (like YouTube if you're in a modern browser).  Just click on the bookmarklet after the video has loaded and a little Notes console will display next to the video.
 
-To get the bookmarklet, visit bookmarklet.html and drag the link up to your bookmarks bar.
+To get the bookmarklet, drag [this link](javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://raw.github.com/20twoes/annotate-bookmarklet/annotate.js';})(); "Annotate Bookmarklet") up to your bookmarks bar.
 
 Features
 --------
