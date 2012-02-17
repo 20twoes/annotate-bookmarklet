@@ -1,5 +1,4 @@
 var Ant = function($) {
-	//console && console.log('Ant1');
 	var self = {};
 
 
@@ -8,10 +7,7 @@ var Ant = function($) {
 	self.video = (function() {
 		// Get the video we're going to annotate
 		var video = document.getElementsByTagName('video');
-		//console && console.log(ant.video);
 		video = video[0] || null;
-
-		//console && console.log(video.src);
 
 		return video;
 	})();
@@ -55,10 +51,6 @@ var Ant = function($) {
 	// Our model view for a note.
 	//
 	self.NoteView = Backbone.View.extend({
-		/*
-		self.template = _.template('<p><%= name %></p>');
-		$(self.template( {'name': 'al'} )).appendTo('body');
-		*/
 		tagName: 'li',
 
 		template: _.template(
@@ -208,6 +200,18 @@ var Ant = function($) {
 
 	// Create encompassing div first
 	var el = (new Backbone.View).make('div', {id: 'ant-app', class: 'ant-draggable'});
+	$(el).offset(function() {
+		// Get video position in window
+		var offset = self.video && $(self.video).offset();
+		if (offset) {
+			offset.left += $(self.video).width() + 12;  // plus padding
+			//offset.top += $(self.video).height() + 50;
+		} else {
+			offset = { top: 0, left: 0 };
+		}
+
+		return offset;
+	});
 	$('body').append(el);
 	$('.ant-draggable').draggable();
 
@@ -236,22 +240,20 @@ function AntLoad() {
 		},
 		{
 			obj: 'Backbone',
-			//src: 'http://documentcloud.github.com/backbone/backbone-min.js'
-			src: '/labs/al/annotate/backbone.js'
+			src: 'http://documentcloud.github.com/backbone/backbone-min.js'
 		},
 		{
 			obj: 'Store',
-			//src: 'https://raw.github.com/jeromegn/Backbone.localStorage/master/backbone.localStorage.js'
-			src: '/labs/al/annotate/localStorage.js'
+			src: 'https://raw.github.com/jeromegn/Backbone.localStorage/master/backbone.localStorage.js'
 		},
 		{
 			obj: 'antPlaceholder',
-			src: '/labs/al/annotate/annotate.css?v=1',
+			src: 'http://raw.github.com/20twoes/annotate-bookmarklet/annotate.css',
 			type: 'css'
 		}
 	];
 
-	var scriptID = 1;
+	var assetID = 1;
 	var load = function(src, type) {
 		if (type) {
 			var el = document.createElement('link');
@@ -263,14 +265,15 @@ function AntLoad() {
 			el.type = 'text/javascript';
 			el.src = src;
 		}
-		el.id = 'ant-asset' + scriptID++;
+		el.id = 'ant-asset' + assetID++;
 		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(el);
 	};
 
 	for (var i = 0; i < dependencies.length; ++i) {
 		var o = dependencies[i];
 		try {
-			eval(o.obj)
+			if (eval(o.obj) == undefined)
+				throw o.obj + " is undefined.";
 		} catch(e) {
 			// Load if obj not defined
 			load(o.src, o.type);
@@ -281,7 +284,7 @@ function AntLoad() {
 	// Start when our last script loads
 	// This is a temp solution
 	// Does not ensure that all scripts have loaded
-	document.getElementById('ant-asset5').addEventListener('load', AntMain);
+	document.getElementById('ant-asset' + (assetID - 2)).addEventListener('load', AntMain);
 };
 
 
