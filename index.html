@@ -1,13 +1,108 @@
 <!DOCTYPE html>
-<html>
-<head>
-<title> Get the Annotate Bookmarklet</title>
-</head>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Annotate, from Al Nguyen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A bookmarklet for taking notes while viewing html5 videos.">
+    <meta name="author" content="Al Nguyen">
+    <link href="bootstrap/less/bootstrap.less" rel="stylesheet/less">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.1.5/less-1.1.5.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <!-- HTML5 shim -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->    
 <body>
+	<div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">Annotate Bookmarklet</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="https://github.com/20twoes/">Github</a></li>
+              <!-- <li><a href="#contact">Contact</a></li> -->
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
 
-<p>Drag this link to your bookmarks: <a href="javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://raw.github.com/20twoes/annotate-bookmarklet/master/annotate.js';})();">Annotate!</a></p>
+    <div class="container">
 
-<p>Then click on the bookmarklet once you're on a page with an HTML5 video, and start taking notes!</p>
+      <!-- Main hero unit for a primary marketing message or call to action -->
+      <div class="hero-unit">
+        <h1>Hungry for note taking?</h1>
+        <p>Drag the button below to your bookmarks, then click on the bookmarklet once you're on a page with an HTML5 video, and start taking notes!</p>
+        <p><a class="btn btn-primary btn-large" href="javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://raw.github.com/20twoes/annotate-bookmarklet/master/annotate.js';})();">Annotate!</a></p>
+      </div>
+
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="span4">
+          <h2>What is it?</h2>
+           <p>Ever wanted to make a note while you were watching that YouTube video? Well now you can!</p>
+		   <p>The Annotate Bookmarklet works with any site that use the HTML5 <code>&lt;video&gt;</code> tag for their videos (like YouTube if have the right browser setup). Just click on the bookmarklet after the video has loaded and a little Notes console will display next to the video.</p>
+        </div>
+        <div class="span4">
+		<h2>Features</h2>
+          <p>
+          	<ul>
+	          <li>Edit and delete your notes</li>
+			  <li>Reposition the Notes console anywhere on the page</li>
+  		    </ul>
+		  </p>
+       </div>
+        <div class="span4">
+          <h2>And more!</h2>
+          <p>
+          	<ul>
+			  <li>Click on the note to reposition the video back to the point you took the note</li>
+			  <li>Your notes will show up again the next time you view the video (uses browser's local storage and depends on URL)</li>
+  		    </ul>
+		  </p>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; Al Nguyen 2012</p>
+      </footer>
+
+    </div> <!-- /container -->
+
+<p></p>
+
+<a href="https://github.com/20twoes/annotate-bookmarklet"><img style="position: absolute; top: 0; left: 0; border: 0; z-index: 2000;" src="https://a248.e.akamai.net/assets.github.com/img/5d21241b64dc708fcbb701f68f72f41e9f1fadd6/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f7265645f6161303030302e706e67" alt="Fork me on GitHub"></a>
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="bootstrap/js/bootstrap-transition.js"></script>
+    <script src="bootstrap/js/bootstrap-alert.js"></script>
+    <script src="bootstrap/js/bootstrap-modal.js"></script>
+    <script src="bootstrap/js/bootstrap-dropdown.js"></script>
+    <script src="bootstrap/js/bootstrap-scrollspy.js"></script>
+    <script src="bootstrap/js/bootstrap-tab.js"></script>
+    <script src="bootstrap/js/bootstrap-tooltip.js"></script>
+    <script src="bootstrap/js/bootstrap-popover.js"></script>
+    <script src="bootstrap/js/bootstrap-button.js"></script>
+    <script src="bootstrap/js/bootstrap-collapse.js"></script>
+    <script src="bootstrap/js/bootstrap-carousel.js"></script>
+    <script src="bootstrap/js/bootstrap-typeahead.js"></script>
 
 </body>
 </html>
