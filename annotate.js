@@ -225,35 +225,9 @@ var Ant = function($) {
 function AntLoad() {
 
 	// __Load dependencies
-	var dependencies = [
-		{
-			obj: 'jQuery',
-			src: 'https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js'
-		},
-		{
-			obj: 'jQuery.ui',
-			src: 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js'
-		},
-		{
-			obj: '_',
-			src: 'http://documentcloud.github.com/underscore/underscore-min.js'
-		},
-		{
-			obj: 'Backbone',
-			src: 'http://documentcloud.github.com/backbone/backbone-min.js'
-		},
-		{
-			obj: 'Store',
-			src: 'https://raw.github.com/jeromegn/Backbone.localStorage/master/backbone.localStorage.js'
-		},
-		{
-			obj: 'antPlaceholder',
-			src: 'https://raw.github.com/20twoes/annotate-bookmarklet/master/annotate.css',
-			type: 'css'
-		}
-	];
+	// TODO:  Stop linking from other domains.
 
-	var assetID = 1;
+	var assetID = 0;
 	var load = function(src, type) {
 		if (type) {
 			var el = document.createElement('link');
@@ -265,31 +239,39 @@ function AntLoad() {
 			el.type = 'text/javascript';
 			el.src = src;
 		}
-		el.id = 'ant-asset' + assetID++;
+		el.id = 'ant-asset' + (++assetID);
 		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(el);
 	};
 
-	for (var i = 0; i < dependencies.length; ++i) {
-		var o = dependencies[i];
-		try {
-			if (eval(o.obj) == undefined)
-				throw o.obj + " is undefined.";
-		} catch(e) {
-			// Load if obj not defined
-			load(o.src, o.type);
-		}
-	}
-	
+	// Load styles
+	load('https://raw.github.com/20twoes/annotate-bookmarklet/master/annotate.css', 'css');
 
-	// Start when our last script loads
-	// This is a temp solution
-	// Does not ensure that all scripts have loaded
-	document.getElementById('ant-asset' + (assetID - 2)).addEventListener('load', AntMain);
+	// Load RequireJS
+	try {
+		if (requirejs == undefined)
+			throw "RequireJS is undefined.";
+		else
+			AntMain();
+	} catch(e) {
+		// Load if obj not defined
+		load('http://requirejs.org/docs/release/1.0.7/minified/require.js');
+	}
+
+	// Load the rest of our dependencies
+	document.getElementById('ant-asset' + assetID).addEventListener('load', AntMain);
 };
 
 
 function AntMain() {
-	window.ant = new Ant(jQuery);
+	require([
+			'https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js',
+			'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js',
+			'http://documentcloud.github.com/underscore/underscore-min.js',
+			'http://documentcloud.github.com/backbone/backbone-min.js',
+			'https://raw.github.com/jeromegn/Backbone.localStorage/master/backbone.localStorage.js'
+		], function() {
+		window.ant = new Ant(jQuery);
+	});
 };
 
 
