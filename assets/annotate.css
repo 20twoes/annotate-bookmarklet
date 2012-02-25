@@ -1,0 +1,32 @@
+#ant-app {
+	margin: 1em 0;
+	padding: 0 1em 1em 1em;
+	border: 5px solid #000;
+	background-color: #fff;
+	position: absolute;
+	width: 400px;
+	z-index: 99999;
+}
+#ant-app h1 {
+	cursor: move;
+}
+#ant-new-note {
+	width: 100%;
+}
+#ant-note-list {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+#ant-note-list li {
+	margin: .25em 0;
+}
+#ant-note-list a {
+	color: #000;
+}
+#ant-note-list a:hover {
+	color: #999;
+}
+#ant-note-list .ant-active {
+	background-color: #ccc;
+}
